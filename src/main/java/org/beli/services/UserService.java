@@ -2,7 +2,6 @@ package org.beli.services;
 
 import org.beli.entities.User;
 import org.beli.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
