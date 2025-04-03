@@ -29,6 +29,10 @@ public class Revenues {
 
     @Getter
     @Setter
+    private Long receivedAmount;
+
+    @Getter
+    @Setter
     private Long revenue;
 
     @Getter
