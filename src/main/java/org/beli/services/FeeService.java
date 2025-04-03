@@ -9,9 +9,6 @@ import org.beli.repositories.PhaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 public class FeeService extends BaseService<Fees, String> {
 
@@ -30,9 +27,5 @@ public class FeeService extends BaseService<Fees, String> {
         fee.setCreatedAt(System.currentTimeMillis());
         fee.setUpdatedAt(System.currentTimeMillis());
         return fee;
-    }
-
-    public Optional<List<Fees>> findByFeePlatform(String feePlatform) {
-        return feeRepository.findByFeePlatform(feePlatform);
     }
 }

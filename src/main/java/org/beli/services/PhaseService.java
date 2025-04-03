@@ -6,9 +6,6 @@ import org.beli.repositories.PhaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-import java.util.Optional;
-
 @Service
 public class PhaseService extends BaseService<Phase, String> {
     @Autowired
@@ -25,10 +22,6 @@ public class PhaseService extends BaseService<Phase, String> {
         phase.setCreatedAt(System.currentTimeMillis());
         phase.setUpdatedAt(System.currentTimeMillis());
         return phase;
-    }
-
-    public Optional<Phase> findByPhaseCode(String phaseCode) {
-        return phaseRepository.findByPhaseCode(phaseCode);
     }
 
 }
