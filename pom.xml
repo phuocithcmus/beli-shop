@@ -36,7 +36,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.3.0.RELEASE</version>
+                <configuration>
+                    <mainClass>org.beli.Main</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
