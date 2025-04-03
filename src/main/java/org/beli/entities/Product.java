@@ -29,15 +29,27 @@ public class Product {
 
     @Getter
     @Setter
-    private String phaseCode;
+    private String size; // S, M, L, XL, etc.
 
     @Getter
     @Setter
-    private Long entryDate;
+    private String color; // Trang, Den, Xanh, Do, etc.
+
+    @Getter
+    @Setter
+    private String phaseCode;
+//
+//    @Getter
+//    @Setter
+//    private Long entryDate;
 
     @Getter
     @Setter
     private Long amount;
+
+    @Getter
+    @Setter
+    private Long price;
 
     @Getter
     @Setter

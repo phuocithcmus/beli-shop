@@ -1,10 +1,8 @@
 package org.beli.handler;
 
-import org.beli.dtos.req.PhaseRequestDto;
 import org.beli.dtos.req.ProductRequestDto;
-import org.beli.entities.Phase;
+import org.beli.dtos.res.ProductResponseDto;
 import org.beli.entities.Product;
-import org.beli.services.PhaseService;
 import org.beli.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +21,14 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getAll() {
-        return productService.findAll();
+    public List<ProductResponseDto> getAll() {
+        var products = productService.findAll();
+        if (products.isEmpty()) {
+            return List.of();
+        }
+        return products.stream().map(e -> {
+            return productService.mappingToProductResponse(e);
+        }).toList();
+
     }
 }

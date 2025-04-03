@@ -1,10 +1,8 @@
 package org.beli.handler;
 
-import org.beli.dtos.req.CreateFeeRequestDto;
 import org.beli.dtos.req.CreateRevenueRequestDto;
-import org.beli.entities.Fees;
+import org.beli.dtos.res.RevenueResponseDto;
 import org.beli.entities.Revenues;
-import org.beli.services.FeeService;
 import org.beli.services.RevenueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +16,16 @@ public class RevenueController {
     private RevenueService revenueService;
 
     @PostMapping
-    public Revenues createFee(@RequestBody CreateRevenueRequestDto revenue) {
-        return revenueService.save(revenueService.mappingToCreateEntity(revenue));
+    public RevenueResponseDto createFee(@RequestBody CreateRevenueRequestDto revenue) {
+        return revenueService.mappingToRevenueResponse(revenueService.save(revenueService.mappingToCreateEntity(revenue)));
     }
 
     @GetMapping
-    public List<Revenues> getAll() {
-        return revenueService.findAll();
+    public List<RevenueResponseDto> getAll() {
+        var revenues = revenueService.findAll();
+
+        return revenues.stream()
+                .map(revenue -> revenueService.mappingToRevenueResponse(revenue))
+                .toList();
     }
 }
