@@ -1,0 +1,20 @@
+{
+  "apps": [
+    {
+      "name": "beli-shop-BE",
+      //      "": "/usrcwd/bin",
+      "args": [
+        "exec:java",
+        "-Dexec.mainClass=org.beli.Main"
+      ],
+      //      "env": {
+      //        "ANY_ENV_VARIABLE": "that you might need in your program"
+      //      },
+      "script": "mvn",
+      "node_args": [],
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "exec_interpreter": "none",
+      "exec_mode": "fork"
+    }
+  ]
+}
