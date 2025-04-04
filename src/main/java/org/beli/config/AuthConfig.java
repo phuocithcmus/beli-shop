@@ -29,6 +29,7 @@ public class AuthConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/*").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/*/*").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/*").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/api/v1/*").permitAll()
                         .anyRequest().authenticated())

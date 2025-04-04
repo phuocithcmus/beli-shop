@@ -42,7 +42,7 @@ public class RevenueService extends BaseService<Revenues, String> {
 
             var feeAmount = Arrays.stream(fees).mapToLong(RevenueFeeResponseDto::getPrice).sum();
 
-            var revenue = dto.receivedAmount() - product.getPrice() - product.getTransferFee() - feeAmount;
+            var revenue = dto.receivedAmount() - (product.getPrice() + product.getTransferFee()) * dto.amount() - feeAmount;
 
             Revenues revenues = new Revenues();
             revenues.setChannel(dto.channel());

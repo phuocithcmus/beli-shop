@@ -3,15 +3,20 @@ package org.beli.services;
 import org.beli.dtos.req.ProductRequestDto;
 import org.beli.dtos.res.ProductResponseDto;
 import org.beli.entities.Product;
+import org.beli.repositories.FeeRepository;
 import org.beli.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductService extends BaseService<Product, String> {
+    @Autowired
+    private ProductRepository productRepository;
 
     @Autowired
-    private PhaseService service;
+    private PhaseService phaseService;
 
     public ProductService(ProductRepository productRepository) {
         super(productRepository);
@@ -40,7 +45,7 @@ public class ProductService extends BaseService<Product, String> {
 
         var phaseCode = dto.getPhaseCode();
 
-        var phaseCodeOpt = service.findByPhaseCode(phaseCode);
+        var phaseCodeOpt = phaseService.findByPhaseCode(phaseCode);
         if (phaseCodeOpt.isPresent()) {
             var phase = phaseCodeOpt.get();
             return new ProductResponseDto(
@@ -60,6 +65,18 @@ public class ProductService extends BaseService<Product, String> {
             );
         } else {
             throw new RuntimeException("Phase not found");
+        }
+    }
+
+    public List<ProductResponseDto> findAllProductByPhaseCode(String phaseCode) {
+        var productOpt = productRepository.findByPhaseCode(phaseCode);
+
+        if (productOpt.isPresent()) {
+            return productOpt.get().stream()
+                    .map(this::mappingToProductResponse)
+                    .toList();
+        } else {
+            throw new RuntimeException("Product not found");
         }
     }
 }
