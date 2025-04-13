@@ -20,6 +20,10 @@ public abstract class BaseService<E, T> {
         return repository.findById(id).orElse(null);
     }
 
+    public E update(E entity) {
+        return repository.save(entity);
+    }
+
     public void deleteById(T id) {
         repository.deleteById(id);
     }

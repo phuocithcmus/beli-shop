@@ -2,6 +2,7 @@ package org.beli.handler;
 
 import org.beli.dtos.req.CreateFeeRequestDto;
 import org.beli.dtos.req.PhaseRequestDto;
+import org.beli.dtos.req.UpdateFeeRequestDto;
 import org.beli.entities.Fees;
 import org.beli.entities.Phase;
 import org.beli.services.FeeService;
@@ -20,6 +21,12 @@ public class FeeController {
     @PostMapping
     public Fees createFee(@RequestBody CreateFeeRequestDto fee) {
         return feeService.save(feeService.mappingToCreateEntity(fee));
+    }
+
+
+    @PatchMapping
+    public Fees updateFee(@RequestBody UpdateFeeRequestDto fee) {
+        return feeService.update(feeService.mappingToUpdateEntity(fee));
     }
 
     @GetMapping

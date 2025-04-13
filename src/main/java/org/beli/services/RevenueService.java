@@ -26,10 +26,32 @@ public class RevenueService extends BaseService<Revenues, String> {
         super(revenueRepository);
     }
 
+    public Revenues createNewRevenue(CreateRevenueRequestDto dto) {
+
+        var product = productService.findById(dto.productId());
+        if (product == null) {
+            throw new RuntimeException("Product not found");
+        }
+        var revenues = mappingToCreateEntity(dto);
+        var newRevenues = revenueRepository.save(revenues);
+
+        if (newRevenues == null) {
+            throw new RuntimeException("Failed to create revenue");
+        }
+        var remainingAmount = product.getRemainingAmount() - dto.amount();
+        product.setRemainingAmount(remainingAmount);
+        productService.update(product);
+
+        System.out.println("Product remaining amount: " + product.getRemainingAmount());
+
+        return newRevenues;
+    }
+
     public Revenues mappingToCreateEntity(CreateRevenueRequestDto dto) {
 
         var feesOpt = feeService.findByFeePlatform(dto.channel());
         var product = productService.findById(dto.productId());
+
 
         if (feesOpt.isPresent()) {
             var fees = feesOpt.get().stream()

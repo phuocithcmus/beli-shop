@@ -17,8 +17,9 @@ public class RevenueController {
 
     @PostMapping
     public RevenueResponseDto createFee(@RequestBody CreateRevenueRequestDto revenue) {
-        return revenueService.mappingToRevenueResponse(revenueService.save(revenueService.mappingToCreateEntity(revenue)));
+        return revenueService.mappingToRevenueResponse(revenueService.createNewRevenue(revenue));
     }
+
 
     @GetMapping
     public List<RevenueResponseDto> getAll() {

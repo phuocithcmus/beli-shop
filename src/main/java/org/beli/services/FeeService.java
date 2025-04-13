@@ -2,6 +2,7 @@ package org.beli.services;
 
 import org.beli.dtos.req.CreateFeeRequestDto;
 import org.beli.dtos.req.PhaseRequestDto;
+import org.beli.dtos.req.UpdateFeeRequestDto;
 import org.beli.entities.Fees;
 import org.beli.entities.Phase;
 import org.beli.repositories.FeeRepository;
@@ -28,6 +29,22 @@ public class FeeService extends BaseService<Fees, String> {
         fee.setFeePlatform(dto.feePlatform());
         fee.setFeeAmount(dto.feeAmount());
         fee.setCreatedAt(System.currentTimeMillis());
+        fee.setUpdatedAt(System.currentTimeMillis());
+        return fee;
+    }
+
+
+    public Fees mappingToUpdateEntity(UpdateFeeRequestDto dto) {
+
+        var feeOpt = feeRepository.findById(dto.id());
+        if (feeOpt.isEmpty()) {
+            throw new RuntimeException("Fee not found");
+        }
+
+        var fee = feeOpt.get();
+        fee.setFeeType(dto.feeType());
+        fee.setFeePlatform(dto.feePlatform());
+        fee.setFeeAmount(dto.feeAmount());
         fee.setUpdatedAt(System.currentTimeMillis());
         return fee;
     }
