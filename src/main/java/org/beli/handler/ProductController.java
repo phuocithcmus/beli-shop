@@ -1,6 +1,7 @@
 package org.beli.handler;
 
 import org.beli.dtos.req.ProductRequestDto;
+import org.beli.dtos.req.UpdateProductRequestDto;
 import org.beli.dtos.res.ProductResponseDto;
 import org.beli.entities.Product;
 import org.beli.services.PhaseService;
@@ -22,6 +23,11 @@ public class ProductController {
     @PostMapping
     public Product createPhase(@RequestBody ProductRequestDto product) {
         return productService.save(productService.mappingToCreateEntity(product));
+    }
+
+    @PatchMapping
+    public Product updatePhase(@RequestBody UpdateProductRequestDto product) {
+        return productService.save(productService.mappingToUpdateEntity(product));
     }
 
     @GetMapping("")

@@ -1,6 +1,7 @@
 package org.beli.services;
 
 import org.beli.dtos.req.ProductRequestDto;
+import org.beli.dtos.req.UpdateProductRequestDto;
 import org.beli.dtos.res.ProductResponseDto;
 import org.beli.entities.Product;
 import org.beli.repositories.FeeRepository;
@@ -41,8 +42,29 @@ public class ProductService extends BaseService<Product, String> {
     }
 
 
-    public ProductResponseDto mappingToProductResponse(Product dto) {
+    public Product mappingToUpdateEntity(UpdateProductRequestDto dto) {
+        var productOpt = productRepository.findById(dto.id());
+        if (productOpt.isEmpty()) {
+            throw new RuntimeException("Product not found");
+        }
+        var product = productOpt.get();
+        product.setCode(dto.code());
+        product.setProductType(dto.productType());
+        product.setFormType(dto.formType());
+        product.setPhaseCode(dto.phaseCode());
+        product.setAmount(dto.amount());
+        product.setTransferFee(dto.transferFee());
+        product.setRemainingAmount(dto.remainingAmount());
+        product.setCreatedAt(System.currentTimeMillis());
+        product.setUpdatedAt(System.currentTimeMillis());
+        product.setSize(dto.size());
+        product.setColor(dto.color());
+        product.setPrice(dto.price());
+        return product;
+    }
 
+
+    public ProductResponseDto mappingToProductResponse(Product dto) {
         var phaseCode = dto.getPhaseCode();
 
         var phaseCodeOpt = phaseService.findByPhaseCode(phaseCode);

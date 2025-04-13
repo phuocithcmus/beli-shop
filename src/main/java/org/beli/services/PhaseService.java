@@ -1,6 +1,7 @@
 package org.beli.services;
 
 import org.beli.dtos.req.PhaseRequestDto;
+import org.beli.dtos.req.UpdatePhaseRequestDto;
 import org.beli.entities.Phase;
 import org.beli.repositories.PhaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,20 @@ public class PhaseService extends BaseService<Phase, String> {
         phase.setPhaseName(dto.phaseName());
         phase.setCreatedAt(System.currentTimeMillis());
         phase.setUpdatedAt(System.currentTimeMillis());
+        return phase;
+    }
+
+    public Phase mappingToUpdateEntity(UpdatePhaseRequestDto dto) {
+        var phaseOpt = phaseRepository.findById(dto.id());
+        if (phaseOpt.isEmpty()) {
+            throw new RuntimeException("Phase not found");
+        }
+        var phase = phaseOpt.get();
+        phase.setPhaseCode(dto.phaseCode());
+        phase.setPhaseName(dto.phaseName());
+        phase.setUpdatedAt(System.currentTimeMillis());
+
+        
         return phase;
     }
 

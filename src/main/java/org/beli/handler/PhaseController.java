@@ -1,6 +1,7 @@
 package org.beli.handler;
 
 import org.beli.dtos.req.PhaseRequestDto;
+import org.beli.dtos.req.UpdatePhaseRequestDto;
 import org.beli.entities.Phase;
 import org.beli.services.PhaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,11 @@ public class PhaseController {
     @PostMapping
     public Phase createPhase(@RequestBody PhaseRequestDto phase) {
         return phaseService.save(phaseService.mappingToCreateEntity(phase));
+    }
+
+    @PatchMapping
+    public Phase updatePhase(@RequestBody UpdatePhaseRequestDto phase) {
+        return phaseService.save(phaseService.mappingToUpdateEntity(phase));
     }
 
     @GetMapping
