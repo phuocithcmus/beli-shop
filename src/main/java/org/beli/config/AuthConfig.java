@@ -26,15 +26,17 @@ public class AuthConfig {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/*").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/*").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/*/*").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/*").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "/api/v1/*").permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/api/v1/*").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/*").permitAll()
-                        .anyRequest().authenticated())
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/*").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/api/v1/*").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/api/v1/*/*").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/api/v1/*").permitAll()
+//                        .requestMatchers(HttpMethod.PATCH, "/api/v1/*").permitAll()
+//                        .requestMatchers(HttpMethod.PATCH, "/api/v1/*/*").permitAll()
+//                        .requestMatchers(HttpMethod.OPTIONS, "/api/v1/*").permitAll()
+//                        .requestMatchers(HttpMethod.DELETE, "/api/v1/*").permitAll()
+//                        .requestMatchers(HttpMethod.DELETE, "/api/v1/*/*").permitAll()
+//                        .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
