@@ -29,6 +29,12 @@ public class ProductController {
     public Product updatePhase(@RequestBody UpdateProductRequestDto product) {
         return productService.save(productService.mappingToUpdateEntity(product));
     }
+    
+    @DeleteMapping("/{id}")
+    public boolean deleteProduct(@PathVariable("id") String id) {
+        productService.deleteById(id);
+        return true;
+    }
 
     @GetMapping("")
     public List<ProductResponseDto> getAll() {

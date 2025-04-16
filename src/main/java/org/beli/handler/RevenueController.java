@@ -29,4 +29,10 @@ public class RevenueController {
                 .map(revenue -> revenueService.mappingToRevenueResponse(revenue))
                 .toList();
     }
+
+    @DeleteMapping("/{id}")
+    public boolean deleteRevenue(@PathVariable("id") String id) {
+        revenueService.deleteById(id);
+        return true;
+    }
 }
