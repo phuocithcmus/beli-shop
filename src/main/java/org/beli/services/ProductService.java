@@ -32,7 +32,7 @@ public class ProductService extends BaseService<Product, String> {
 //        product.setEntryDate(dto.entryDate());
         product.setAmount(dto.amount());
         product.setTransferFee(dto.transferFee());
-        product.setRemainingAmount(dto.remainingAmount());
+        product.setRemainingAmount(dto.amount());
         product.setCreatedAt(System.currentTimeMillis());
         product.setUpdatedAt(System.currentTimeMillis());
         product.setSize(dto.size());
@@ -54,7 +54,6 @@ public class ProductService extends BaseService<Product, String> {
         product.setPhaseCode(dto.phaseCode());
         product.setAmount(dto.amount());
         product.setTransferFee(dto.transferFee());
-        product.setRemainingAmount(dto.remainingAmount());
         product.setCreatedAt(System.currentTimeMillis());
         product.setUpdatedAt(System.currentTimeMillis());
         product.setSize(dto.size());
