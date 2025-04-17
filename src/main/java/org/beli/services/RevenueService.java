@@ -89,6 +89,10 @@ public class RevenueService extends BaseService<Revenues, String> {
         var feesOpt = feeService.findByFeePlatform(dto.getChannel());
         var product = productService.findById(dto.getProductId());
 
+        if (product == null) {
+            return null;
+        }
+
         if (feesOpt.isPresent()) {
             var fees = feesOpt.get().stream()
                     .map(fee -> new RevenueFeeResponseDto(
