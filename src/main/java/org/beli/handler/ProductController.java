@@ -64,11 +64,11 @@ public class ProductController {
         }
         return products;
     }
-    
+
     @GetMapping(value = "/download_excel")
     public HttpEntity<ByteArrayResource> createExcelWithTaskConfigurations() throws IOException {
         try {
-            ByteArrayOutputStream stream = productService.exportToExcel();
+            ByteArrayOutputStream stream = productService.exportToExcel("products");
             ByteArrayResource resource = new ByteArrayResource(stream.toByteArray());
 
             HttpHeaders headers = new HttpHeaders();
