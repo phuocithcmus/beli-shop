@@ -1,8 +1,11 @@
 package org.beli.services;
 
 import org.beli.dtos.req.CreateRevenueRequestDto;
+import org.beli.dtos.req.UpdateProductRequestDto;
+import org.beli.dtos.req.UpdateRevenueRequestDto;
 import org.beli.dtos.res.RevenueFeeResponseDto;
 import org.beli.dtos.res.RevenueResponseDto;
+import org.beli.entities.Product;
 import org.beli.entities.Revenues;
 import org.beli.repositories.RevenueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,7 +105,6 @@ public class RevenueService extends BaseService<Revenues, String> {
                     ))
                     .toArray(RevenueFeeResponseDto[]::new);
 
-            var feeAmount = Arrays.stream(fees).mapToLong(RevenueFeeResponseDto::getPrice).sum();
 
             return new RevenueResponseDto(
                     dto.getId(),
@@ -119,5 +121,51 @@ public class RevenueService extends BaseService<Revenues, String> {
         } else {
             throw new RuntimeException("Phase not found");
         }
+    }
+
+    public Revenues mappingToUpdateEntity(UpdateRevenueRequestDto dto) {
+        var revenuesOpt = revenueRepository.findById(dto.id());
+        if (revenuesOpt.isEmpty()) {
+            throw new RuntimeException("Revenue not found");
+        }
+        var revenues = revenuesOpt.get();
+        revenues.setChannel(dto.channel());
+        revenues.setPrice(dto.price());
+        revenues.setSellPrice(dto.sellPrice());
+        revenues.setProductId(dto.productId());
+        revenues.setAmount(dto.amount());
+        revenues.setFees(dto.fees());
+        revenues.setUpdatedAt(System.currentTimeMillis());
+
+        return revenues;
+    }
+
+    public Revenues updateRevenue(UpdateRevenueRequestDto dto) {
+        var revenues = mappingToUpdateEntity(dto);
+        var updatedRevenues = revenueRepository.save(revenues);
+
+        var revenuesOpt = revenueRepository.findById(dto.id());
+
+        if (revenuesOpt.isEmpty()) {
+            throw new RuntimeException("Revenue not found");
+        }
+        var revenuesEntity = revenuesOpt.get();
+
+        var product = productService.findById(dto.productId());
+        if (product == null) {
+            throw new RuntimeException("Product not found");
+        }
+
+        if (updatedRevenues == null) {
+            throw new RuntimeException("Failed to update revenue");
+        }
+
+        var currentAmount = revenuesEntity.getAmount(); // 3
+
+        var remainingAmount = product.getRemainingAmount() + (currentAmount - dto.amount());
+        product.setRemainingAmount(remainingAmount);
+        productService.update(product);
+
+        return updatedRevenues;
     }
 }
