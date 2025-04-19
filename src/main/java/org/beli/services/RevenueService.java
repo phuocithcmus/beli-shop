@@ -11,6 +11,7 @@ import org.beli.repositories.RevenueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
 @Service
@@ -82,38 +83,28 @@ public class RevenueService extends BaseService<Revenues, String> {
 
     public RevenueResponseDto mappingToRevenueResponse(Revenues dto) {
 
-        var feesOpt = feeService.findByFeePlatform(dto.getChannel());
         var product = productService.findById(dto.getProductId());
 
         if (product == null) {
             return null;
         }
 
-        if (feesOpt.isPresent()) {
-            var fees = feesOpt.get().stream()
-                    .map(fee -> new RevenueFeeResponseDto(
-                            fee.getFeeType(),
-                            fee.getFeePlatform(),
-                            fee.getFeeAmount()
-                    ))
-                    .toArray(RevenueFeeResponseDto[]::new);
+        // Empty array
+        var fees = new RevenueFeeResponseDto[]{};
 
-
-            return new RevenueResponseDto(
-                    dto.getId(),
-                    dto.getChannel(),
-                    dto.getPrice(),
-                    dto.getSellPrice(),
-                    dto.getRevenue(),
-                    dto.getAmount(),
-                    dto.getReceivedAmount(),
-                    fees,
-                    product.getId(),
-                    product.getCode()
-            );
-        } else {
-            throw new RuntimeException("Phase not found");
-        }
+        return new RevenueResponseDto(
+                dto.getId(),
+                dto.getChannel(),
+                dto.getPrice(),
+                dto.getSellPrice(),
+                dto.getRevenue(),
+                dto.getAmount(),
+                dto.getReceivedAmount(),
+                fees,
+                product.getId(),
+                product.getCode(),
+                dto.getPackageFee()
+        );
     }
 
     public Revenues mappingToUpdateEntity(UpdateRevenueRequestDto dto) {

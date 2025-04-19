@@ -40,13 +40,16 @@ public class RevenueResponseDto {
     @Setter
     private String productId;
 
-
     @Getter
     @Setter
     private String productCode;
 
+    @Getter
+    @Setter
+    private Long packageFee;
+
     public RevenueResponseDto(String id, String channel, Long price, Long sellPrice, Long revenue,
-                              Long amount, Long receivedAmount, RevenueFeeResponseDto[] fees, String productId, String productCode) {
+                              Long amount, Long receivedAmount, RevenueFeeResponseDto[] fees, String productId, String productCode, Long packageFee) {
         this.id = id;
         this.channel = channel;
         this.price = price;
@@ -57,5 +60,6 @@ public class RevenueResponseDto {
         this.fees = fees;
         this.productId = productId;
         this.productCode = productCode;
+        this.packageFee = packageFee;
     }
 }
