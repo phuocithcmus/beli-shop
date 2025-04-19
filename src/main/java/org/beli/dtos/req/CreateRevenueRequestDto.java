@@ -6,5 +6,5 @@ public record CreateRevenueRequestDto(String channel,
                                       Long receivedAmount,
                                       String productId,
                                       Long amount,
-                                      String fees) {
+                                      Long packageFee) {
 }

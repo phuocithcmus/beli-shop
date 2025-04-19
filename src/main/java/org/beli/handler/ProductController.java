@@ -7,6 +7,7 @@ import org.beli.entities.Product;
 import org.beli.services.PhaseService;
 import org.beli.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class ProductController {
     public Product updatePhase(@RequestBody UpdateProductRequestDto product) {
         return productService.save(productService.mappingToUpdateEntity(product));
     }
-    
+
     @DeleteMapping("/{id}")
     public boolean deleteProduct(@PathVariable("id") String id) {
         productService.deleteById(id);
@@ -38,7 +39,7 @@ public class ProductController {
 
     @GetMapping("")
     public List<ProductResponseDto> getAll() {
-        var products = productService.findAll();
+        var products = productService.findAllSortBy("createdAt");
         if (products.isEmpty()) {
             return List.of();
         }

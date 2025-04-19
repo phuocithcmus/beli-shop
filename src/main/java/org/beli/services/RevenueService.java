@@ -57,15 +57,8 @@ public class RevenueService extends BaseService<Revenues, String> {
 
 
         if (feesOpt.isPresent()) {
-            var fees = feesOpt.get().stream()
-                    .map(fee -> new RevenueFeeResponseDto(
-                            fee.getFeeType(),
-                            fee.getFeePlatform(),
-                            fee.getFeeAmount()
-                    ))
-                    .toArray(RevenueFeeResponseDto[]::new);
 
-            var feeAmount = Arrays.stream(fees).mapToLong(RevenueFeeResponseDto::getPrice).sum();
+            var feeAmount = dto.packageFee(); // + additional fees
 
             var revenue = dto.receivedAmount() - (product.getPrice() + product.getTransferFee()) * dto.amount() - feeAmount;
 
@@ -75,7 +68,7 @@ public class RevenueService extends BaseService<Revenues, String> {
             revenues.setSellPrice(dto.sellPrice());
             revenues.setProductId(dto.productId());
             revenues.setAmount(dto.amount());
-            revenues.setFees(dto.fees());
+            revenues.setPackageFee(dto.packageFee());
             revenues.setCreatedAt(System.currentTimeMillis());
             revenues.setUpdatedAt(System.currentTimeMillis());
             revenues.setRevenue(revenue);
@@ -134,7 +127,7 @@ public class RevenueService extends BaseService<Revenues, String> {
         revenues.setSellPrice(dto.sellPrice());
         revenues.setProductId(dto.productId());
         revenues.setAmount(dto.amount());
-        revenues.setFees(dto.fees());
+        revenues.setPackageFee(dto.packageFee());
         revenues.setUpdatedAt(System.currentTimeMillis());
 
         return revenues;

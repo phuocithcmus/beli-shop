@@ -27,7 +27,7 @@ public class RevenueController {
 
     @GetMapping
     public List<RevenueResponseDto> getAll() {
-        var revenues = revenueService.findAll();
+        var revenues = revenueService.findAllSortBy("createdAt");
 
         return revenues.stream()
                 .map(revenue -> revenueService.mappingToRevenueResponse(revenue))

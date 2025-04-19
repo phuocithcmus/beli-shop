@@ -7,5 +7,5 @@ public record UpdateRevenueRequestDto(String id,
                                       Long receivedAmount,
                                       String productId,
                                       Long amount,
-                                      String fees) {
+                                      Long packageFee) {
 }

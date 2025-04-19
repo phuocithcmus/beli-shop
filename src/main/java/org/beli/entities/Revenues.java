@@ -54,4 +54,8 @@ public class Revenues {
     @Getter
     @Setter
     private String fees;
+
+    @Getter
+    @Setter
+    private Long packageFee;
 }

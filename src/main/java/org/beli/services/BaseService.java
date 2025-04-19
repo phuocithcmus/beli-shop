@@ -1,5 +1,6 @@
 package org.beli.services;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -30,5 +31,9 @@ public abstract class BaseService<E, T> {
 
     public List<E> findAll() {
         return repository.findAll();
+    }
+
+    public List<E> findAllSortBy(String sortBy) {
+        return repository.findAll(Sort.by(Sort.Direction.DESC, sortBy));
     }
 }
