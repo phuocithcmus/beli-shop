@@ -7,9 +7,17 @@ import org.beli.entities.Product;
 import org.beli.services.PhaseService;
 import org.beli.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -48,7 +56,6 @@ public class ProductController {
         }).toList();
     }
 
-
     @GetMapping("/{phaseCode}")
     public List<ProductResponseDto> getAllByPhaseCode(@PathVariable("phaseCode") String phaseCode) {
         var products = productService.findAllProductByPhaseCode(phaseCode);
@@ -56,5 +63,25 @@ public class ProductController {
             return List.of();
         }
         return products;
+    }
+    
+    @GetMapping(value = "/download_excel")
+    public HttpEntity<ByteArrayResource> createExcelWithTaskConfigurations() throws IOException {
+        try {
+            ByteArrayOutputStream stream = productService.exportToExcel();
+            ByteArrayResource resource = new ByteArrayResource(stream.toByteArray());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=export.xlsx");
+            headers.add(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, must-revalidate");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentLength(stream.size())
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

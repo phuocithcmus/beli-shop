@@ -1,5 +1,7 @@
 package org.beli.services;
 
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.beli.dtos.req.ProductRequestDto;
 import org.beli.dtos.req.UpdateProductRequestDto;
 import org.beli.dtos.res.ProductResponseDto;
@@ -7,8 +9,14 @@ import org.beli.entities.Product;
 import org.beli.repositories.FeeRepository;
 import org.beli.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -99,5 +107,94 @@ public class ProductService extends BaseService<Product, String> {
         } else {
             throw new RuntimeException("Product not found");
         }
+    }
+
+    public ByteArrayResource export() throws IOException {
+        StringBuilder filename = new StringBuilder("Product_Export").append(" - ");
+        filename.append(System.currentTimeMillis()).append(".xlsx");
+
+        return export(filename.toString());
+    }
+
+    private ByteArrayResource export(String filename) throws IOException {
+        byte[] bytes = new byte[1024];
+        try (Workbook workbook = generateExcel()) {
+            FileOutputStream fos = write(workbook, filename);
+            fos.write(bytes);
+            fos.flush();
+            fos.close();
+        }
+
+        return new ByteArrayResource(bytes);
+    }
+
+    private Workbook generateExcel() {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet();
+
+        //create columns and rows
+        Row row = sheet.createRow(0);
+
+        Cell cell = row.createCell(0);
+        cell.setCellValue("ID");
+        return workbook;
+    }
+
+    private FileOutputStream write(final Workbook workbook, final String filename) throws IOException {
+        FileOutputStream fos = new FileOutputStream(filename);
+        workbook.write(fos);
+        fos.close();
+        return fos;
+    }
+
+    public ByteArrayOutputStream exportToExcel(String sheetName) throws Exception {
+        // Create workbook and sheet
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet(sheetName);
+
+        // Create header style
+        CellStyle headerStyle = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setBold(true);
+        headerStyle.setFont(font);
+        headerStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+        // Create headers
+        List<String> headers = Arrays.asList("ID", "Name", "Email", "Department");
+        Row headerRow = sheet.createRow(0);
+        for (int i = 0; i < headers.size(); i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers.get(i));
+            cell.setCellStyle(headerStyle);
+        }
+
+        // Sample data
+        List<List<String>> data = Arrays.asList(
+                Arrays.asList("1", "John Doe", "john@example.com", "IT"),
+                Arrays.asList("2", "Jane Smith", "jane@example.com", "HR"),
+                Arrays.asList("3", "Bob Johnson", "bob@example.com", "Finance")
+        );
+
+        // Fill data
+        for (int i = 0; i < data.size(); i++) {
+            Row row = sheet.createRow(i + 1);
+            List<String> rowData = data.get(i);
+            for (int j = 0; j < rowData.size(); j++) {
+                row.createCell(j).setCellValue(rowData.get(j));
+            }
+        }
+
+        // Auto-size columns
+        for (int i = 0; i < headers.size(); i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        // Write to output stream
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+
+        return outputStream;
     }
 }
