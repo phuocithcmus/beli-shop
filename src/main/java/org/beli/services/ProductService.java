@@ -161,7 +161,7 @@ public class ProductService extends BaseService<Product, String> {
         headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         // Create headers
-        List<String> headers = Arrays.asList("ID", "Name", "Email", "Department");
+        List<String> headers = Arrays.asList("Code", "Phase", "Amount", "Price", "Transfer Fee", "Remaining Amount");
         Row headerRow = sheet.createRow(0);
         for (int i = 0; i < headers.size(); i++) {
             Cell cell = headerRow.createCell(i);
@@ -170,11 +170,19 @@ public class ProductService extends BaseService<Product, String> {
         }
 
         // Sample data
-        List<List<String>> data = Arrays.asList(
-                Arrays.asList("1", "John Doe", "john@example.com", "IT"),
-                Arrays.asList("2", "Jane Smith", "jane@example.com", "HR"),
-                Arrays.asList("3", "Bob Johnson", "bob@example.com", "Finance")
-        );
+
+        List<Product> products = productRepository.findAll();
+
+        List<List<String>> data = products.stream().map(product -> {
+            return Arrays.asList(
+                    product.getCode(),
+                    product.getPhaseCode(),
+                    String.valueOf(product.getAmount()),
+                    String.valueOf(product.getPrice()),
+                    String.valueOf(product.getTransferFee()),
+                    String.valueOf(product.getRemainingAmount())
+            );
+        }).toList();
 
         // Fill data
         for (int i = 0; i < data.size(); i++) {
