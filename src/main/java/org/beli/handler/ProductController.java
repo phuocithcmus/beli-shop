@@ -3,6 +3,7 @@ package org.beli.handler;
 import org.beli.dtos.req.ProductRequestDto;
 import org.beli.dtos.req.UpdateProductRequestDto;
 import org.beli.dtos.res.ProductResponseDto;
+import org.beli.dtos.res.RemainningProductResponseDto;
 import org.beli.entities.Product;
 import org.beli.services.PhaseService;
 import org.beli.services.ProductService;
@@ -59,6 +60,15 @@ public class ProductController {
     @GetMapping("/{phaseCode}")
     public List<ProductResponseDto> getAllByPhaseCode(@PathVariable("phaseCode") String phaseCode) {
         var products = productService.findAllProductByPhaseCode(phaseCode);
+        if (products.isEmpty()) {
+            return List.of();
+        }
+        return products;
+    }
+
+    @GetMapping("/products-remainning")
+    public List<RemainningProductResponseDto> productsRemainning() {
+        var products = productService.getAllProductsOfAllPhases();
         if (products.isEmpty()) {
             return List.of();
         }

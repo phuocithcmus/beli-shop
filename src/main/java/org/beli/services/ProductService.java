@@ -2,9 +2,11 @@ package org.beli.services;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.beli.Utils;
 import org.beli.dtos.req.ProductRequestDto;
 import org.beli.dtos.req.UpdateProductRequestDto;
 import org.beli.dtos.res.ProductResponseDto;
+import org.beli.dtos.res.RemainningProductResponseDto;
 import org.beli.entities.Product;
 import org.beli.repositories.FeeRepository;
 import org.beli.repositories.ProductRepository;
@@ -18,6 +20,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService extends BaseService<Product, String> {
@@ -204,5 +208,33 @@ public class ProductService extends BaseService<Product, String> {
         workbook.close();
 
         return outputStream;
+    }
+
+    public List<RemainningProductResponseDto> getAllProductsOfAllPhases() {
+        var products = productRepository.findAll();
+        if (products.isEmpty()) {
+            throw new RuntimeException("No products found");
+        }
+        products.forEach(product -> {
+            System.out.println(product.getCode());
+        });
+
+        Map<String, Long> productListRemaninningAmount = products.stream()
+                .collect(Collectors.groupingBy(Product::getCode,
+                        Collectors.summingLong(Product::getRemainingAmount)));
+
+        // products list unique by code
+        List<Product> productsUnique = products.stream()
+                .filter(Utils.distinctByKey(Product::getCode)).toList();
+
+        List<RemainningProductResponseDto> remainningProductResponseDtos = productsUnique.stream()
+                .map(product -> {
+                    return new RemainningProductResponseDto(
+                            product.getCode(),
+                            productListRemaninningAmount.get(product.getCode())
+                    );
+                }).toList();
+
+        return remainningProductResponseDtos;
     }
 }
